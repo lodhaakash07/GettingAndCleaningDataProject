@@ -28,7 +28,7 @@ if(!file.exists("getdata_projectfiles_UCI HAR Dataset.zip")) {
 ### For the Test data
 
 # Load the activity lables
-activities_label<- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
+label<- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
 
 # Load the X_test and y_test data.
 X_test <- read.table("./UCI HAR Dataset/test/X_test.txt")
@@ -50,7 +50,7 @@ names(X_test) <- features
 X_test = X_test[,need_features]
 
 # Load activity labels
-y_test[,2] = activities_label[y_test[,1]]
+y_test[,2] = label[y_test[,1]]
 
 names(y_test) = c("Activity_ID", "Activity_Label")
 names(subject) = "subject"
@@ -58,6 +58,9 @@ names(subject) = "subject"
 # Bind data
 test_data <- cbind(subject,y_test,X_test)
 
+## We donot need this data anymore
+X_test <- NULL
+y_test <- NULL
 
 ## For the train data
 
@@ -72,12 +75,16 @@ names(X_train) = features
 X_train = X_train[,need_features]
 
 # Load activity data
-y_train[,2] = activities_label[y_train[,1]]
+y_train[,2] = label[y_train[,1]]
 names(y_train) = c("Activity_ID", "Activity_Label")
 names(subject_train) = "subject"
 
 # Bind data
 train_data <- cbind(subject_train,y_train, X_train)
+
+## We donot need this data anumore
+X_train <- NULL
+y_train <- NULL
 
 # Merge test and train data
 data <-  rbind(test_data, train_data)
