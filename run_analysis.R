@@ -11,10 +11,19 @@
 ## 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 ## I have uploaded the data too so run directly
-## Date
+## Date -[1] "Sat Aug 23 15:12:41 2014"
 
+install.packages("data.table")
+library(data.table)
+install.packages("reshape2")
+library(reshape2)
 
+if(!file.exists("getdata_projectfiles_UCI HAR Dataset.zip")) {
+  url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+  download.file(url,method="curl",destfile="getdata_projectfiles_UCI HAR Dataset.zip")  
+}
 
+## Extract the zip file manually
 
 ### For the Test data
 
@@ -74,9 +83,12 @@ train_data <- cbind(subject_train,y_train, X_train)
 data <-  rbind(test_data, train_data)
 
 data <- data.table(data)
+
 id_labels = c("subject", "Activity_ID", "Activity_Label")
 data_labels = setdiff(colnames(data), id_labels)
 melt_data = melt(data, id = id_labels, measure.vars = data_labels)
 # Apply mean function to dataset using dcast function
 tidy_data = dcast(melt_data, subject + Activity_Label ~ variable, mean)
+
+##Write the tidy_data to a file
 write.table(tidy_data, file = "tidy_data.txt")
